@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.time.ZonedDateTime;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
