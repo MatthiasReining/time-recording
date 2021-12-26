@@ -22,6 +22,8 @@ import com.tech11.tr.tickets.entity.TicketEntity;
 import com.tech11.tr.users.control.AppUserController;
 import com.tech11.tr.users.entity.AppUser;
 
+import io.quarkus.panache.common.Parameters;
+
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/tr")
@@ -80,7 +82,10 @@ public class TimeRecordsResources {
         // }
 
         // create ticket
-        List<TicketEntity> ticketEntities = TicketEntity.find("ticketNumber", timeRecord.getTicketNumber()).list();
+
+        List<TicketEntity> ticketEntities = TicketEntity.find("#" + TicketEntity.QUERY_BY_TICKETNUMBER,
+                Parameters.with(TicketEntity.PARAM_TICKETNUMBER, timeRecord.getTicketNumber()))
+                .list();
         final TicketEntity ticketEntity;
         if (ticketEntities.isEmpty()) {
             ticketEntity = new TicketEntity();
