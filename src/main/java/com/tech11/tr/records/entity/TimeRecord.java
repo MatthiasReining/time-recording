@@ -1,34 +1,29 @@
 package com.tech11.tr.records.entity;
 
-import static org.hibernate.annotations.CascadeType.ALL;
-
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-import com.tech11.tr.tickets.entity.Ticket;
-import com.tech11.tr.users.entity.AppUser;
+import lombok.Getter;
+import lombok.Setter;
 
-import org.hibernate.annotations.Cascade;
+@Getter
+@Setter
+public class TimeRecord {
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-
-@Entity
-public class TimeRecord extends PanacheEntity {
-
-    public LocalDate recordDate;
-    public String recordOwner;
-    /**
-     * JIRA Ticket number
-     */
-    @ManyToOne
-    public Ticket ticket;
-    public String description;
-
-    public String status;
-    @ManyToOne 
-    @Cascade(ALL)
-    public AppUser createdBy;
-
+    private Long id;
+    @NotNull
+    private LocalDate workingDay;
+    private String ownerName;
+    @NotNull
+    private Integer duration;
+    private ZonedDateTime startActivity;
+    private ZonedDateTime endActivity;
+    @NotBlank
+    private String ticketNumber;
+    private String description;
+    private String status;
+    private String createdByName;
 }
