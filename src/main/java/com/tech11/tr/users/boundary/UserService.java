@@ -1,4 +1,4 @@
-package com.tech11.tr.users.control;
+package com.tech11.tr.users.boundary;
 
 import java.security.Principal;
 import java.time.ZonedDateTime;
@@ -7,16 +7,17 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
-import com.tech11.tr.users.entity.AppUser;
+import com.tech11.tr.users.entity.AppUserEntity;
 
 import io.quarkus.security.UnauthorizedException;
 import io.quarkus.security.identity.SecurityIdentity;
 
 @RequestScoped
-public class AppUserController {
+public class UserService {
 
     @Inject
     SecurityIdentity identity;
@@ -29,16 +30,17 @@ public class AppUserController {
     SecurityContext sec;
 
     
-    public AppUser getLoggedInUser() {
+    @Transactional
+    public AppUserEntity getLoggedInUserEntity() {
         final Principal user = identity.getPrincipal();
         // final Principal user = sec.getUserPrincipal();
         if (user == null)
             throw new UnauthorizedException();
         final String name = user.getName();
         System.out.println("loggedin user " + name);
-        AppUser u = AppUser.find("userName", name).firstResult();
+        AppUserEntity u = AppUserEntity.find("userName", name).firstResult();
         if (u == null) {
-            u = new AppUser();
+            u = new AppUserEntity();
             u.userName = name;
             u.lastLogin = ZonedDateTime.now();
             u.lastUpdate = ZonedDateTime.now();

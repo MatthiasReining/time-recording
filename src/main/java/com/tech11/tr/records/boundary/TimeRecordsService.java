@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -12,17 +13,18 @@ import com.tech11.tr.records.control.TimeRecordMapper;
 import com.tech11.tr.records.entity.TimeRecord;
 import com.tech11.tr.records.entity.TimeRecordEntity;
 import com.tech11.tr.tickets.entity.TicketEntity;
-import com.tech11.tr.users.control.AppUserController;
+import com.tech11.tr.users.boundary.UserService;
 
 import io.quarkus.panache.common.Parameters;
 
+@RequestScoped
 public class TimeRecordsService {
 
     @Inject
     TimeRecordMapper timeRecordMapper;
 
     @Inject
-    AppUserController appUserController;
+    UserService userService;
 
     public List<TimeRecord> loadAll() {
         // inspired by
@@ -43,13 +45,13 @@ public class TimeRecordsService {
             trEntity = TimeRecordEntity.findById(timeRecord.getId());
         }
 
-        trEntity.createdBy = appUserController.getLoggedInUser();
+        trEntity.createdBy = userService.getLoggedInUserEntity();
         trEntity.status = "OPEN";
         trEntity.description = timeRecord.getDescription();
         trEntity.workingDay = timeRecord.getWorkingDay();
         trEntity.duration = timeRecord.getDuration();
         // if (timeRecord.ownerName == null) {
-        trEntity.owner = appUserController.getLoggedInUser();
+        trEntity.owner = userService.getLoggedInUserEntity();
         // } else {
         // TODO set entity
         // }

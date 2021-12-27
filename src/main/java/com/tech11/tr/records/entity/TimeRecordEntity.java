@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.tech11.tr.tickets.entity.TicketEntity;
-import com.tech11.tr.users.entity.AppUser;
+import com.tech11.tr.users.entity.AppUserEntity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
@@ -21,7 +21,7 @@ public class TimeRecordEntity extends PanacheEntity {
     public LocalDate workingDay;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    public AppUser owner;
+    public AppUserEntity owner;
 
     public ZonedDateTime startActivity;
     public ZonedDateTime endActivity;
@@ -36,6 +36,6 @@ public class TimeRecordEntity extends PanacheEntity {
 
     public String status;
     @ManyToOne(cascade = CascadeType.ALL)
-    public AppUser createdBy;
+    public AppUserEntity createdBy;
 
 }
