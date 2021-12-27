@@ -16,7 +16,7 @@ import com.tech11.tr.records.entity.TimeRecord;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/tr")
+@Path("/api/tr")
 public class TimeRecordsResources {
 
     @Inject

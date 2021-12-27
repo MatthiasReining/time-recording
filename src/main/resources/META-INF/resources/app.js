@@ -1,4 +1,7 @@
-import UserService from "./src/users/boundary/UserService.js";
+import { html, render } from "./src/web_modules/lit-html.js";
+import TimeRecordingAppComponent from "./src/app/boundary/TimeRecordingAppComponent.js";
+import updateI18n from "./src/base/Ti18nFormatter.js";
+TimeRecordingAppComponent.register();
 
 class MainApp {
   constructor() {
@@ -7,7 +10,15 @@ class MainApp {
   }
 
   async init() {
-    console.log('MainApp', await UserService.getCurrentUser());
+    await updateI18n("en-US", "eur", "en-US");
+    this.renderComponent();
+  }
+
+  renderComponent() {
+    render(
+      html` <t11-time-recording-app></t11-time-recording-app> `,
+      document.body
+    );
   }
 
   static bootstrap() {

@@ -11,7 +11,6 @@ import javax.ws.rs.core.SecurityContext;
 
 import com.tech11.tr.users.control.AppUserMapper;
 import com.tech11.tr.users.entity.AppUser;
-import com.tech11.tr.users.entity.AppUserEntity;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
