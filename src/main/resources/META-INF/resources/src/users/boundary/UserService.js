@@ -1,8 +1,7 @@
 export default class UserService {
 
     static async getCurrentUser() {
-        const currentUser = await fetch('http://example.com/movies.json')
-  .then(response => response.json())
-  .then(data => console.log(data));
+        const response = await fetch('./api/users/me');
+        return response.json();
     }
 }
