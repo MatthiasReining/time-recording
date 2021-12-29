@@ -11,14 +11,15 @@ import AttrBigDecimal from "../../base/renderer/AttrBigDecimal.js";
 
 AttrText.register();
 AttrLocaleDate.register();
-AttrBigDecimal.register
+AttrBigDecimal.register;
 ContextElement.register();
 
 export default class TimeRecordingAppComponent extends AbstractWebComponent {
   async init() {
     this._user = await UserService.getCurrentUser();
 
-    this._records = [];
+    this._records = await this._loadTicketsByCurrentUser();
+
     this._record = {
       description: null,
       workingDay: new Date().toISOString().substring(0, 10),
@@ -28,8 +29,15 @@ export default class TimeRecordingAppComponent extends AbstractWebComponent {
     this._data = {};
   }
 
-  _post() {
-    this._record = TimeRecordsService.createOrUpdate(this._record);
+  async _loadTicketsByCurrentUser() {
+    return TimeRecordsService.get({
+      userName: this._user.userName,
+    });
+  }
+
+  async _post() {
+    this._record = await TimeRecordsService.createOrUpdate(this._record);
+    this._records = await this._loadTicketsByCurrentUser();
     this.refreshContext();
   }
 
@@ -65,14 +73,41 @@ export default class TimeRecordingAppComponent extends AbstractWebComponent {
             .attrDef=${{
               key: "duration",
               label: "DURATION",
-              step: 0
+              step: 0,
             }}
           ></t11-attr-bigdecimal>
-          <br>
-          <button class="btn btn-primary" @click=${() => this._post()}>POST</button>
+          <br />
+          <button class="btn btn-primary" @click=${() => this._post()}>
+            POST
+          </button>
 
           <hr />
           ${JSON.stringify(this._record, 2, " ")}
+          <hr />
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">working day</th>
+                <th scope="col">duration</th>
+                <th scope="col">ticket</th>
+                <th scope="col">description</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this._records.map(
+                (record) => html`
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>${record.workingDay}</td>
+                    <td>${record.duration}</td>
+                    <td>${record.ticketNumber}</td>
+                    <td>${record.description}</td>
+                  </tr>
+                `
+              )}
+            </tbody>
+          </table>
         </div>
       </t11-context>
     `;

@@ -6,6 +6,8 @@ import java.time.ZonedDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -16,7 +18,15 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 @Entity(name = "TimeRecord")
 @Table(name = "timerecord")
+@NamedQueries({
+    @NamedQuery(name = TimeRecordEntity.QUERY_BY_OWNER, query = "from TimeRecord where owner.userName = :"
+            + TimeRecordEntity.PARAM_OWNER),
+})
 public class TimeRecordEntity extends PanacheEntity {
+
+    public static final String QUERY_BY_OWNER = "TimeRecord.byOwner";
+    public static final String PARAM_OWNER = "Owner";
+
 
     public LocalDate workingDay;
 

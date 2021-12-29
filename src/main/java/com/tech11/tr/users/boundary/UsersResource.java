@@ -9,6 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
+import com.tech11.tr.records.boundary.TimeRecordsService;
 import com.tech11.tr.users.control.AppUserMapper;
 import com.tech11.tr.users.entity.AppUser;
 
@@ -19,6 +20,9 @@ public class UsersResource {
 
     @Inject
     UserService userService;
+
+    @Inject
+    TimeRecordsService timeRecordsService;
 
     @Inject
     AppUserMapper appUserMapper;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -13,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.tech11.tr.records.entity.TimeRecord;
+import com.tech11.tr.records.entity.TimeRecordsQueryParam;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -23,13 +25,16 @@ public class TimeRecordsResources {
     TimeRecordsService trService;
 
     @GET
-    public List<TimeRecord> loadAll() {
-        return trService.loadAll();
+    public List<TimeRecord> load(@BeanParam TimeRecordsQueryParam params) {
+        if (params == null)
+            return trService.loadAll();
+
+        return trService.load(params);
     }
 
     @GET
     @Path("{id}")
-    public TimeRecord load(@PathParam("id") Long id) {
+    public TimeRecord loadById(@PathParam("id") Long id) {
         return trService.load(id);
     }
 
