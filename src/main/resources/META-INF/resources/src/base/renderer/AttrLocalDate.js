@@ -1,7 +1,7 @@
 import { html } from '../../web_modules/lit-html.js';
 import AbstractAttrRenderer from './AbstractAttrRenderer.js';
 
-export default class AttrLocaleDate extends AbstractAttrRenderer {
+export default class AttrLocalDate extends AbstractAttrRenderer {
     renderAttrElement(attrDef, value) {
         const { key, inputPattern = null } = attrDef;
 
@@ -19,10 +19,10 @@ export default class AttrLocaleDate extends AbstractAttrRenderer {
     }
 
     static register() {
-        if (!customElements.get('t11-attr-locale-date')) {
-            customElements.define('t11-attr-locale-date', AttrLocaleDate);
+        if (!customElements.get('t11-attr-local-date')) {
+            customElements.define('t11-attr-local-date', AttrLocalDate);
         }
     }
 }
 
-AttrLocaleDate.register();
+AttrLocalDate.register();
