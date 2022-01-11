@@ -1,17 +1,28 @@
-import copy from "rollup-plugin-copy";
-import { terser } from "rollup-plugin-terser";
-import resolve from '@rollup/plugin-node-resolve';
-
+// import copy from "rollup-plugin-copy";
+// import { terser } from "rollup-plugin-terser";
+import nodeResolve from "@rollup/plugin-node-resolve";
 
 const distDir = "../resources/META-INF/resources";
+const webModulesDir = "./src/web_modules";
 
 // terser()
 export default [
+  
+  {
+    input: [
+      './node_modules/lit-html/lit-html.js',
+      './node_modules/i18next/dist/esm/i18next.js',
+    ],
+    output: { dir: "./src/web_modules", format: "es" },
+    plugins: [nodeResolve({ browser: true })],
+  },
+  /*
   {
     input: "./app.js",
     output: [
       { file: `${distDir}/app.js`, format: "iife", plugins: [] },
     ],
-    plugins: [resolve(), copy({ targets: [{ src: "index.html", dest: distDir }] })],
+    plugins: [nodeResolve(), copy({ targets: [{ src: "index.html", dest: distDir }] })],
   },
+  */
 ];

@@ -1,9 +1,8 @@
-import { html, render } from "lit-html";
+import { html, render } from "./src/web_modules/lit-html.js";
 import TimeRecordingAppComponent from "./src/app/boundary/TimeRecordingAppComponent.js";
 import updateI18n from "./src/base/Ti18nFormatter.js";
 
 TimeRecordingAppComponent.register();
-
 
 class MainApp {
   constructor() {

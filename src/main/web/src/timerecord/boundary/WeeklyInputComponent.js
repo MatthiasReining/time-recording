@@ -1,4 +1,4 @@
-import { html } from "lit-html";
+import { html } from "../../web_modules/lit-html.js";
 
 import AttrText from "../../base/renderer/AttrText.js";
 import UserService from "../../users/boundary/UserService.js";

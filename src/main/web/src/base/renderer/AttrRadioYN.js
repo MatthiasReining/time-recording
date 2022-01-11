@@ -1,5 +1,5 @@
+import { html } from "../../web_modules/lit-html.js";
 import { i18n } from '../../utils/Ti18nFormatter.js';
-import { html } from "lit-html";
 import AbstractAttrRenderer from './AbstractAttrRenderer.js';
 
 export default class AttrRadioYN extends AbstractAttrRenderer {

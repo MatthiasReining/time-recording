@@ -1,4 +1,4 @@
-import { render, html } from "lit-html";
+import { render, html } from "./lit-html.js";
 
 const registry = new Map();
 

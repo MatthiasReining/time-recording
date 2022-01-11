@@ -1,5 +1,5 @@
 import { AbstractWebComponent } from "../../web_modules/tech11-web-base.js";
-import { html } from "lit-html";
+import { html } from "../../web_modules/lit-html.js";
 import { i18n } from "../Ti18nFormatter.js";
 
 const attrDefDefault = {

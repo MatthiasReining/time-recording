@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"npx rollup -c --watch\" \"npx browser-sync start --proxy 'http://localhost:8080' --files '../resources/META-INF/resources/*' \" "
+    "dev": "concurrently \"npx rollup -c --watch\" \"npx browser-sync start --proxy 'http://localhost:8080' --files '../resources/META-INF/resources/*' \" ",
+    "build": "npx rollup -c",
+    "offline": "npx browser-sync start -s"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +21,6 @@
   },
   "dependencies": {
     "@vaadin/router": "^1.7.4",
-    "i": "^0.3.7",
     "i18next": "^21.6.5",
     "i18next-http-backend": "^1.3.1",
     "lit-html": "^2.1.0",

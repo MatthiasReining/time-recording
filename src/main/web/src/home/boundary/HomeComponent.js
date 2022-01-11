@@ -1,4 +1,4 @@
-import { html } from "lit-html";
+import { html } from "../../web_modules/lit-html.js";
 import { AbstractWebComponent } from "../../web_modules/tech11-web-base.js";
 
 export default class HomeComponent extends AbstractWebComponent {

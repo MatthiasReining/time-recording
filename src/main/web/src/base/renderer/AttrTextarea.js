@@ -1,4 +1,4 @@
-import { html } from "lit-html";
+import { html } from "../../web_modules/lit-html.js";
 import AbstractAttrRenderer from './AbstractAttrRenderer.js';
 
 export default class AttrTextarea extends AbstractAttrRenderer {

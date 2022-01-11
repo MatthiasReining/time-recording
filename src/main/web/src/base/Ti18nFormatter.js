@@ -1,4 +1,4 @@
-import i18next from 'i18next';
+import i18next from '../web_modules/i18next.js';
 import Backend from '../web_modules/i18nextHttpBackend.js';
 
 import UserSettingsService from './settings/UserSettingsService.js';
