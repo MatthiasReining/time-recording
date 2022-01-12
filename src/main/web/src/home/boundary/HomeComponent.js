@@ -7,7 +7,9 @@ export default class HomeComponent extends AbstractWebComponent {
       <h1>Home</h1>
       <hr />
       <a href="input">input</a><br />
-      <a href="weekly">weekly</a>
+      <a href="weekly">weekly</a><br />
+      <a href="weekly-x">weekly-x</a><br />
+      <a href="weekly-y">weekly-y</a>
     `;
   }
 

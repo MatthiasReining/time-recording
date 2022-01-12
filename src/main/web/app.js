@@ -1,12 +1,18 @@
 import { html, render } from "./src/web_modules/lit-html.js";
 import TimeRecordingAppComponent from "./src/app/boundary/TimeRecordingAppComponent.js";
 import updateI18n from "./src/base/Ti18nFormatter.js";
+import MockApp from "./mock/MockApp.js";
 
 TimeRecordingAppComponent.register();
 
 class MainApp {
   constructor() {
     console.log("constructor");
+
+    console.log('Use Mock Data');
+    MockApp.init();
+
+    
     this.init();
   }
 

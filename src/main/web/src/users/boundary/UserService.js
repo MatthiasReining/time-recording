@@ -1,6 +1,8 @@
+import RequestUtils from "../../base/RequestUtils.js";
+
 export default class UserService {
 
     static async getCurrentUser() {
-        return (await fetch('./api/users/me')).json();
+        return RequestUtils.fetchSecureAsync('./api/users/me');
     }
 }
