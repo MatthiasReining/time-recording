@@ -1,12 +1,19 @@
 // import copy from "rollup-plugin-copy";
 // import { terser } from "rollup-plugin-terser";
 import nodeResolve from "@rollup/plugin-node-resolve";
+import scss from 'rollup-plugin-scss'
 
 const distDir = "../resources/META-INF/resources";
 const webModulesDir = "./src/web_modules";
 
 // terser()
 export default [
+  {
+    input: 'scss/entry.js',   
+    plugins: [
+      scss({sourceMap: true})
+    ]
+  },
   
   {
     input: [

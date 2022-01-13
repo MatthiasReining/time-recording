@@ -15,19 +15,47 @@ AttrLocalDate.register();
 AttrBigDecimal.register;
 ContextElement.register();
 
+/**
+ * TimeRecord entity.
+ * @typedef {Object} TimeRecord
+ * @property {Number} id - technical id.
+ * @property {String} workingDay - date in format yyyy-DD-mm
+ * @property {String} ownerName
+ * @property {Number} duration
+ * @property {String} startActivity - start time of this actitity (ZonedDateTime)
+ * @property {String} endActivity - end time of this actitity (ZonedDateTime)
+ * @property {String} ticketNumber
+ * @property {String} description
+ * @property {String} status
+ * @property {String} createdByName
+ */
 export default class WeeklyInputXComponent extends AbstractWebComponent {
   async init() {
     const mondayDateTxt = "2022-01-03"; // Monday
     const mondeyDate = new Date(mondayDateTxt);
-    this.week = [];
+    /**
+     * activity days
+     * @type {TimeRecord[]}
+     */
+    this._timeRecords = [];
+
+    // prettier-ignore
+    { // block just for formatting
+    this._timeRecords.push({workingDay: '2022-01-03', ticketNumber: 'IPBIZ-123', duration: 1, description: 'blub'});
+    this._timeRecords.push({workingDay: '2022-01-03',  ticketNumber: 'IPBIZ-631', duration: 5, description: 'heavy work'});
+    this._timeRecords.push({workingDay: '2022-01-04',  ticketNumber: 'IPBIZ-123', duration: 3, description: 'blub'});
+    }
+
+    this._workWeek = [];
 
     for (let i = 0; i < 7; i++) {
       const day = new Date(
         mondayDateTxt.substring(0, 8) + (mondeyDate.getDate() + i + 1)
       );
-      this.week.push(day.toISOString().substring(0, 10));
+      const dayTxt = day.toISOString().substring(0, 10);
+      this._workWeek.push(dayTxt);
     }
-    console.log("week", this.week);
+    console.log("timeRecords", this._timeRecords, this._workWeek);
 
     this._user = await UserService.getCurrentUser();
 
@@ -35,7 +63,7 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
 
     this._data = {};
   }
-
+  g;
   async _loadTicketsByCurrentUser() {
     return TimeRecordsService.get({
       userName: this._user.userName,
@@ -53,30 +81,103 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
     this.refreshContext();
   }
 
-  _renderTRDay(trDay) {
-    const minColumns = 5;
+  /**
+   * Transform time records to a map by ticket number.
+   * @returns {Object.<String, TimeRecord>} time records by ticket numbers.
+   */
+  _getTimeRecordsByTickets() {
+    const tickets = {};
+    this._timeRecords.forEach((tr) => {
+      if (!tickets[tr.ticketNumber]) tickets[tr.ticketNumber] = [];
+      tickets[tr.ticketNumber].push(tr);
+    });
+    return tickets;
+  }
 
-    const recordWeek = {};
+  _getTotalHoursByWorkingDate(workingDay) {
+    return this._timeRecords
+      .filter((tr) => tr.workingDay === workingDay)
+      .map((tr) => tr.duration || 0)
+      .reduce((t1, t2) => t1 + t2, 0);
+  }
 
-    let row = "";
-    for (let i = 0; i < 7; i++) {
-      row = html`${row}
-        <td>
-          <t11-attr-text
-            .container=${recordWeek}
-            .attrDef=${{
-              key: `ticketNumber-${trDay}-${i}`,
-              noLabel: true,
-            }}
-          ></t11-attr-text>
-        </td>`;
+  _renderTicketWorkingDayCell(workingDay, timeRecords) {
+    if (!timeRecords) return "";
+
+    const ticketNumber = timeRecords[0].ticketNumber;
+    let timeRecord = timeRecords.find((tr) => tr.workingDay === workingDay);
+    if (!timeRecord) {
+      // create record for this working day
+      timeRecord = { ticketNumber, workingDay };
+      this._timeRecords.push(timeRecord);
     }
-    return row;
+
+    return html`
+      <td>
+        <t11-attr-bigdecimal
+          .container=${timeRecord}
+          .attrDef=${{
+            key: "duration",
+            label: "duration",
+          }}
+        ></t11-attr-bigdecimal>
+      </td>
+    `;
+  }
+
+  /**
+   * All time records belongs to the same ticket!
+   * @param {TimeRecord[]} tickets
+   */
+  _renderTicketRow(timeRecords) {
+    if (!timeRecords) return "";
+    const ticketNumber = timeRecords[0].ticketNumber;
+    const description = timeRecords[0].description;
+
+    const virtualBracketTicket = { ticketNumber, description };
+
+    return html`<tr>
+      <td>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <t11-attr-text
+              .container=${virtualBracketTicket}
+              .attrDef=${{
+                key: "ticketNumber",
+                label: "Ticket Number",
+                cssInputAdditionalClasses: "t11-inputTicketNumber",
+              }}
+            ></t11-attr-text>
+          </div>
+          <div class="col-md">
+            <t11-attr-text
+              .container=${virtualBracketTicket}
+              .attrDef=${{
+                key: "description",
+                label: "Description",
+              }}
+            ></t11-attr-text>
+          </div>
+        </div>
+      </td>
+      ${this._workWeek.map((workingDay) =>
+        this._renderTicketWorkingDayCell(workingDay, timeRecords)
+      )}
+    </tr> `;
+  }
+
+  _renderTicketRows() {
+    const tickets = Object.values(this._getTimeRecordsByTickets());
+
+    console.log("tickets", tickets);
+    return tickets.map((ticket) => this._renderTicketRow(ticket));
   }
 
   renderComponent() {
     const minRows = 5;
-    const rows = this.week.map(day => {day: []})
+    const rows = this._timeRecords.map((day) => {
+      day: [];
+    });
     return html`
       <t11-context .value=${this._data}>
         <div class="container">
@@ -86,20 +187,18 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
             <thead>
               <tr>
                 <th scope="col">Activity</th>
-                ${this.week.map(
-                  (trDay) => html` <th scope="col">${trDay}</th> `
+                ${this._workWeek.map(
+                  (date) =>
+                    html`
+                      <th scope="col">
+                        ${date} (${this._getTotalHoursByWorkingDate(date)}h)
+                      </th>
+                    `
                 )}
               </tr>
             </thead>
             <tbody>
-              ${this.week.map(
-                (trDate) => html`
-                  <tr>
-                    <td>${trDate}</td>
-                    ${this._renderTRDay(trDate)}
-                  </tr>
-                `
-              )}
+              ${this._renderTicketRows()}
             </tbody>
           </table>
           <button class="btn btn-primary btn-sm" @click=${() => this._addRow()}>
@@ -112,6 +211,8 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
             update
           </button>
         </div>
+        <hr />
+        ${JSON.stringify(this._timeRecords)}
       </t11-context>
     `;
   }

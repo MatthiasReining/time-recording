@@ -6,7 +6,8 @@ const attrDefDefault = {
   label: "LABEL",
   key: null,
   mandatory: false,
-  style: "default",
+  Xstyle: "default",
+  style: "floating",
   labelCss: null,
   cssLabelAdditionalClasses: "",
   noLabel: false,
@@ -132,6 +133,7 @@ export default class AbstractAttrRenderer extends AbstractWebComponent {
       cssLabelColSize = 2,
       cssLabelAdditionalClasses = "",
       cssInputColSize,
+      cssInputAdditionalClasses = "",
       labelSuffixFn,
       noLabel,
       labelBeforeEndHTML,
@@ -167,9 +169,9 @@ export default class AbstractAttrRenderer extends AbstractWebComponent {
     } ${this.getAddtionalDataCss()}`; // default
 
     if (attrDef.style === "floating") {
-      return html` <div class="form-floating mb-3">
+      return html` <div class="form-floating">
           ${this.renderAttrElement(attrDef, value)}
-          <label for=${this.getId(attrDef)}
+          <label for=${this.getId(attrDef)} class=${cssLabelAdditionalClasses}
             >${i18n.msg(label)} ${mandatoryText}
             ${labelSuffixFn ? labelSuffixFn() : ""}${labelBeforeEndHTML}
             ${this._renderTooltip(tooltip)}
