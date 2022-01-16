@@ -7813,4 +7813,25 @@ input.t11-inputTicketNumber {
   font-size: 1.3rem;
   font-weight: 900; }
 
+table .t11-col-day0 {
+  background-color: rgba(116, 130, 190, 0.1); }
+
+table .t11-col-day1 {
+  background-color: rgba(116, 130, 190, 0.15); }
+
+table .t11-col-day2 {
+  background-color: rgba(116, 130, 190, 0.2); }
+
+table .t11-col-day3 {
+  background-color: rgba(116, 130, 190, 0.25); }
+
+table .t11-col-day4 {
+  background-color: rgba(116, 130, 190, 0.3); }
+
+table .t11-col-day5 {
+  background-color: rgba(116, 130, 190, 0.35); }
+
+table .t11-col-day6 {
+  background-color: rgba(116, 130, 190, 0.4); }
+
 /*# sourceMappingURL=bundle.css.map */

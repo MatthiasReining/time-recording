@@ -9,8 +9,7 @@ export default class AttrText extends AbstractAttrRenderer {
       style === "floating" && !attrDef.placeholder
         ? label
         : attrDef.placeholder;
-    console.log("attrDef", attrDef, placeholder);
-
+    
     return html`
       <input
         type="text"

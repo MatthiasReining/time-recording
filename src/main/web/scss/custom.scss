@@ -3,7 +3,8 @@
 
 // Include any default variable overrides here (though functions won't be available)
 
-$form-floating-label-transform: scale(0.65) translateY(-0.5rem) translateX(0.15rem);
+$form-floating-label-transform: scale(0.65) translateY(-0.5rem)
+  translateX(0.15rem);
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
@@ -12,4 +13,12 @@ $form-floating-label-transform: scale(0.65) translateY(-0.5rem) translateX(0.15r
 input.t11-inputTicketNumber {
   font-size: 1.3rem;
   font-weight: 900;
+}
+
+@for $i from 0 to 7 {
+  table {
+    .t11-col-day#{$i} {
+      background-color: rgba(116, 130, 190, 0.1 + $i/20);
+    }
+  }
 }

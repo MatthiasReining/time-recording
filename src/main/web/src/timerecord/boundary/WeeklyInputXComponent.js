@@ -55,7 +55,6 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
       const dayTxt = day.toISOString().substring(0, 10);
       this._workWeek.push(dayTxt);
     }
-    console.log("timeRecords", this._timeRecords, this._workWeek);
 
     this._user = await UserService.getCurrentUser();
 
@@ -63,7 +62,7 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
 
     this._data = {};
   }
-  g;
+
   async _loadTicketsByCurrentUser() {
     return TimeRecordsService.get({
       userName: this._user.userName,
@@ -71,7 +70,7 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
   }
 
   _addRow() {
-    this._records.push({ ticketNumber: null });
+    this._timeRecords.push({ ticketNumber: null });
     this.refreshContext();
   }
 
@@ -101,7 +100,7 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
       .reduce((t1, t2) => t1 + t2, 0);
   }
 
-  _renderTicketWorkingDayCell(workingDay, timeRecords) {
+  _renderTicketWorkingDayCell(workingDay, timeRecords, dayCount) {
     if (!timeRecords) return "";
 
     const ticketNumber = timeRecords[0].ticketNumber;
@@ -113,7 +112,7 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
     }
 
     return html`
-      <td>
+      <td class="t11-col-day${dayCount}">
         <t11-attr-bigdecimal
           .container=${timeRecord}
           .attrDef=${{
@@ -123,6 +122,20 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
         ></t11-attr-bigdecimal>
       </td>
     `;
+  }
+
+  _updateTicketRow(e, virtualBracketTicket) {
+    let { ticketNumber } = virtualBracketTicket;
+    if (e.detail.key === "ticketNumber") {
+      ticketNumber = e.detail.oldValue;
+    }
+
+    // FIXME must be a full match; otherwise tickets will be overwritten
+    this._timeRecords
+      .filter((tr) => tr.ticketNumber === ticketNumber)
+      .forEach((tr) => {
+        Object.assign(tr, virtualBracketTicket);
+      });
   }
 
   /**
@@ -137,7 +150,9 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
     const virtualBracketTicket = { ticketNumber, description };
 
     return html`<tr>
-      <td>
+      <td
+        @valueChanged=${(e) => this._updateTicketRow(e, virtualBracketTicket)}
+      >
         <div class="row g-2">
           <div class="col-md-6">
             <t11-attr-text
@@ -160,16 +175,14 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
           </div>
         </div>
       </td>
-      ${this._workWeek.map((workingDay) =>
-        this._renderTicketWorkingDayCell(workingDay, timeRecords)
+      ${this._workWeek.map((workingDay, i) =>
+        this._renderTicketWorkingDayCell(workingDay, timeRecords, i)
       )}
     </tr> `;
   }
 
   _renderTicketRows() {
     const tickets = Object.values(this._getTimeRecordsByTickets());
-
-    console.log("tickets", tickets);
     return tickets.map((ticket) => this._renderTicketRow(ticket));
   }
 
@@ -180,7 +193,7 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
     });
     return html`
       <t11-context .value=${this._data}>
-        <div class="container">
+        <div class="m-5">
           <hr />
           <h2>Weekly X</h2>
           <table class="table">
@@ -188,9 +201,9 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
               <tr>
                 <th scope="col">Activity</th>
                 ${this._workWeek.map(
-                  (date) =>
+                  (date, i) =>
                     html`
-                      <th scope="col">
+                      <th scope="col" class="t11-col-day${i}">
                         ${date} (${this._getTotalHoursByWorkingDate(date)}h)
                       </th>
                     `

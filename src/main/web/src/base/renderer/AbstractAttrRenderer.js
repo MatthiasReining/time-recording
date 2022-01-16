@@ -31,6 +31,7 @@ export default class AbstractAttrRenderer extends AbstractWebComponent {
 
     /**
      * Function that is called after the value is changed.
+     * @deprecated use the valueChanged event (`@valueChanged( (e) => ...))
      */
     this.onValueChanged = null;
 
@@ -67,10 +68,21 @@ export default class AbstractAttrRenderer extends AbstractWebComponent {
     const detail = {
       newValue: value,
       oldValue: this.container[this.attrDef.key],
+      key: this.attrDef.key,
+      keyPath: this.attrDef.keyPath,
     };
     this.container[this.attrDef.key] = value;
+    if (this.onValueChanged) this.onValueChanged(detail, this.container);
+
+    this.dispatchEvent(
+      new CustomEvent("valueChanged", {
+        bubbles: true,
+        cancelable: true,
+        detail,
+      })
+    );
+
     this.refreshContext();
-    if (this.onValueChanged) this.onValueChanged(detail);
   }
 
   /**
@@ -169,7 +181,8 @@ export default class AbstractAttrRenderer extends AbstractWebComponent {
     } ${this.getAddtionalDataCss()}`; // default
 
     if (attrDef.style === "floating") {
-      return html` <div class="form-floating">
+      return html`
+        <div class="form-floating">
           ${this.renderAttrElement(attrDef, value)}
           <label for=${this.getId(attrDef)} class=${cssLabelAdditionalClasses}
             >${i18n.msg(label)} ${mandatoryText}
@@ -177,7 +190,7 @@ export default class AbstractAttrRenderer extends AbstractWebComponent {
             ${this._renderTooltip(tooltip)}
           </label>
         </div>
-        `
+      `;
     }
 
     return html` <div class="form-group row">

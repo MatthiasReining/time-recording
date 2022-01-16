@@ -22,7 +22,7 @@ export default class TimeRecordingAppComponent extends AbstractWebComponent {
           Header
           <hr />
         </header>
-        <div class="container">
+        <div class="container-fluid">
           <slot name="mainContent"></slot>
         </div>
         <footer>
