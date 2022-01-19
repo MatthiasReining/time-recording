@@ -9,6 +9,8 @@ import {
 import AttrLocalDate from "../../base/renderer/AttrLocalDate.js";
 import TimeRecordsService from "./TimeRecordsService.js";
 import AttrBigDecimal from "../../base/renderer/AttrBigDecimal.js";
+import DebugDataComponent from "../../base/tools/DebugDataComponent.js";
+
 
 AttrText.register();
 AttrLocalDate.register();
@@ -224,8 +226,7 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
             update
           </button>
         </div>
-        <hr />
-        ${JSON.stringify(this._timeRecords)}
+        <t11-debug-data .debugModel=${this._timeRecords}></t11-debug-data>
       </t11-context>
     `;
   }
