@@ -11,11 +11,11 @@ import TimeRecordsService from "./TimeRecordsService.js";
 import AttrBigDecimal from "../../base/renderer/AttrBigDecimal.js";
 import DebugDataComponent from "../../base/tools/DebugDataComponent.js";
 
-
 AttrText.register();
 AttrLocalDate.register();
 AttrBigDecimal.register;
 ContextElement.register();
+DebugDataComponent.register();
 
 /**
  * TimeRecord entity.
@@ -114,7 +114,7 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
     }
 
     return html`
-      <td class="t11-col-day${dayCount}">
+      <td class="col-1 t11-col-day${dayCount}">
         <t11-attr-bigdecimal
           .container=${timeRecord}
           .attrDef=${{
@@ -153,20 +153,32 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
 
     return html`<tr>
       <td
+        class="col"
         @valueChanged=${(e) => this._updateTicketRow(e, virtualBracketTicket)}
       >
         <div class="row g-2">
-          <div class="col-md-6">
+          <div class="col-3">
             <t11-attr-text
               .container=${virtualBracketTicket}
               .attrDef=${{
                 key: "ticketNumber",
                 label: "Ticket Number",
+                alwaysMandatory: true,
                 cssInputAdditionalClasses: "t11-inputTicketNumber",
               }}
             ></t11-attr-text>
           </div>
-          <div class="col-md">
+          <div class="col-4">
+            <div class="row mt-1">
+              <div class="col text-truncate">Insurance Platform - Business</div>
+            </div>
+            <div class="row">
+              <div class="col text-truncate">
+                Insert layers in ClerkUI for a better structure
+              </div>
+            </div>
+          </div>
+          <div class="col">
             <t11-attr-text
               .container=${virtualBracketTicket}
               .attrDef=${{
@@ -175,6 +187,17 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
               }}
             ></t11-attr-text>
           </div>
+          <!--
+          <div class="col">
+            <t11-attr-text
+              .container=${virtualBracketTicket}
+              .attrDef=${{
+            key: "description",
+            label: "Description",
+          }}
+            ></t11-attr-text>
+          </div>
+            -->
         </div>
       </td>
       ${this._workWeek.map((workingDay, i) =>
@@ -201,11 +224,11 @@ export default class WeeklyInputXComponent extends AbstractWebComponent {
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Activity</th>
+                <th scope="col" class="col">Activity</th>
                 ${this._workWeek.map(
                   (date, i) =>
                     html`
-                      <th scope="col" class="t11-col-day${i}">
+                      <th scope="col" class="col-1 t11-col-day${i}">
                         ${date} (${this._getTotalHoursByWorkingDate(date)}h)
                       </th>
                     `
